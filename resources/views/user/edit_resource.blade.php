@@ -72,7 +72,7 @@
 		                     					</select>
 		                     					
 		                     				</div>
-		                     					<p class="add_array"><a href="#" class="btn btn-danger remove_field" title="Delete"><i class="fa fa-remove"></i></a> <a class="skema_add_field btn btn-primary" title="Add New Array"><i class="fa fa-plus"></i></a></p><br>
+		                     					<p class="add_array"><a href="#" class="btn btn-danger remove_field" title="Delete"><i class="fa fa-remove"></i></a> <a class="skema_add_field btn btn-primary" title="Add New Array"><i class="fa fa-plus"></i></a></p><div class="br"><br></div>
 		                     				@php $nomor = 1; $nomor2 = 1; $nomor3 = 1; @endphp
 		                     				@foreach($data_skema as $data2)	
 			                     				@if($data2->parent_id != '' && $data2->field == $hiha)

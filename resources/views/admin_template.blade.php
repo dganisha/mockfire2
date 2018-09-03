@@ -325,6 +325,7 @@ desired effect
                 // console.log($(this).parent('.skema2').find('.d'+wow[1]));
                 var cari_a1 = $(this).parents('.skema').find('.skema2')
                 var cari_a2 = $(this).parents('.skema').find('.skema3')
+                $(this).parents('.skema').find('.br').empty();
                 $(cari_a1).find(dibalik).empty()
                 $(cari_a2).find(dibalik).empty()
                 $(cari_button).remove()
@@ -352,7 +353,7 @@ desired effect
               // CODE BEFORE line 216
               // $(this).parents(".skema").find(".skema3").append('<div class="new_form2 form-group"><select class="get_input2 form-control select2" name="'+search_field+'['+isi+'][type][]" style="width: 100%;"><option value="TES">TESS</option></select></div>');
 
-              $(this).parents(".skema").find(".skema3").last().append('<div class="new_form2 d'+x+' form-group"><select class="form-control select2" name="'+search_field+'['+isi+'][type][]" style="width: 100%;" id="type">@isset($data_opsigroup) @foreach($data_opsigroup as $databaru)<optgroup label="{{ $databaru->option_grup }}">@isset($data_opsi) @foreach($data_opsi as $opsi) @if($opsi->skemaopsigroup_id == $databaru->id) @if($data2->type_schema == $opsi->name_opsi) <option value="{{ $data2->type_schema }}" selected="selected">{{ $opsi->value_opsi }} (Current)</option> @elseif($opsi->name_opsi == 'array') @else <option value="{{ $opsi->name_opsi }}">{{ $opsi->value_opsi }}</option> @endif @endif  @endforeach @endisset</optgroup>@endforeach @endisset</select></div>');
+              $(this).parents(".skema").find(".skema3").last().append('<div class="new_form2 d'+x+' form-group"><select class="form-control select2" name="'+search_field+'['+isi+'][type][]" style="width: 100%;" id="type">@isset($data_opsigroup) @foreach($data_opsigroup as $databaru)<optgroup label="{{ $databaru->option_grup }}">@isset($data_opsi) @foreach($data_opsi as $opsi) @if($opsi->skemaopsigroup_id == $databaru->id) @if($opsi->name_opsi == 'array') @else <option value="{{ $opsi->name_opsi }}">{{ $opsi->value_opsi }}</option> @endif @endif  @endforeach @endisset</optgroup>@endforeach @endisset</select></div>');
               $(this).parents(".skema").find(".skema4").last().append('<div class="remove-button d'+x+'"><p class="remove_array"><a class="text-danger"><i class="fa fa-close"></i></a></p><br></div>');
               
             }
