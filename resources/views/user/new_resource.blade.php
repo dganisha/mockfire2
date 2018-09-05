@@ -23,10 +23,10 @@
                   <label>Schema</label>
                   <div class="daftar-isi">
                     <div class="row skema">
-                      <div class="col-xs-3 col-md-3 col-lg-3">
+                      <div class="col-xs-4 col-md-3 col-lg-3">
                         <input class="form-control namefield" type="text" onkeyup="nospaces(this)" name="field[field1][key]" value="id">
                       </div>
-                      <div class="col-xs-3 col-md-3 col-lg-3">
+                      <div class="col-xs-4 col-md-3 col-lg-3">
                         <input class="form-control valuefield" type="text" name="field[field1][value]"value="ObjectID" readonly="">
                       </div>
                     </div>
