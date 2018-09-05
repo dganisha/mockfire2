@@ -10,7 +10,7 @@ class UserController extends Controller
     	return view('user.index');
     }
     public function page() {
-    	return view('dashboard');
+    	return view('portal');
     }
 
     public function help()

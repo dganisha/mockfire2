@@ -13,6 +13,7 @@ use App\Resource;
 use App\Skema;
 use App\Skemaopsi;
 use App\Skemaopsigroup;
+use App\Userproject;
 use Faker\Factory as Faker;
 // use Faker\Provider\id_ID\Person as Fakk;
 use Auth;
@@ -31,6 +32,21 @@ class ProjectController extends Controller
 		return response()->json($data);
 	}
 
+    public function invite_project(Request $request)
+    {
+        // return $request->all();
+        $user = User::where('email', $request->email)->first();
+        if($user == TRUE){
+            $invite = Userproject::create([
+                'user_id' => $user->id,
+                'project_id' => $request->projectid
+            ]);
+            if($invite == TRUE){
+                return redirect("/project/".Auth::user()->id."/p/$request->projectid")->with('success','Success invite friend');
+            }
+        }
+    }
+
     public function add_project(Request $request) {
     	// return $request->all();
 
@@ -40,69 +56,76 @@ class ProjectController extends Controller
     	$rand_str = str_random(15);
 
     	$create_project = Project::create([
-            'user_id' => $user_id,
+            'user_id' => Auth::user()->id,
             'name_project' => $name_project,
             'endpoint' => $rand_str,
         ]);
+
+        $create_userproject = Userproject::create([
+            'user_id' => Auth::user()->id,
+            'project_id' => $create_project->id
+        ]);
+
         $simpan = public_path().'/users/project/'.$name_project;
         File::makeDirectory($simpan, $mode = 0777, true, true);
 
 
-        $user_project = Project::where('user_id',$user_id)->get();
+        $user_project = Project::where('user_id',Auth::user()->id)->get();
 
-        if($create_project) {
+        if($create_project && $create_userproject) {
         	return redirect('project/'.Auth::user()->id.'')->with('success','Success create project')->with('data_project',$user_project);
         }
     }
 
     public function get_project(Request $request, $id) {
-    	$user_project = Project::where('user_id',$id)->orderBy('id','DESC')->get();
-
-    	if ($user_project) {
-    		// return $user_project;
-    		// return redirect()->with('data_project',$user_project);
-    		return view('user.index')->with('data_project',$user_project);
-    	}
+        $data_project = Userproject::where('user_id', Auth::user()->id)->get();
+        if($data_project == TRUE){
+            return view('user.index', compact('data_project'));
+        }
     }
 
     public function detail_project(Request $request, $id, $id_project) {
-    	$user = User::where('id',$id)->first();
-    	$project = Project::where('user_id',$id)->where('id',$id_project)->first();
-    	if($project){
-    		$resource = Resource::where('project_id',$id_project)->get();
-    		return view('user.projects')->with('data_resource',$resource)->with('data_project',$project);
-    	}
-    	
+        $cari_userproject = Userproject::where('user_id', Auth::user()->id)->where('project_id', $id_project)->first();
+        if($cari_userproject == TRUE){
+            $data_project = Project::where('id', $cari_userproject->project_id)->first();
+            if($data_project == TRUE){
+                $data_resource = Resource::where('project_id', $data_project->id)->get();
+                return view('user.projects', compact('data_resource', 'data_project'));
+            }
+        }else{
+            return redirect('/project/'.Auth::user()->id)->with('failed', 'Project doesnt exists');
+        }
     }
 
     public function edit_resource(Request $request, $id, $id_project, $id_resources) {
-    	$user = User::where('id',$id)->first();
-    	$data_project = Project::where('user_id',$id)->where('id',$id_project)->first();
-    	if($data_project){
-    		$data_resource = Resource::where('id',$id_resources)->first();
-    		$data_skema = Skema::where('resource_id',$id_resources)->get();
-    		$data_opsi = Skemaopsi::get();
-            $data_opsigroup = Skemaopsigroup::get();
-    		$data_cek = Skema::where('resource_id',$id_resources)->where('type_schema','array')->get();
-    		// return $cek;
-    		// return $skema;
-    		return view('user.edit_resource', compact('data_skema','data_project','data_resource','data_opsi','data_opsigroup','data_cek'));
-    	}
-    	
+        $cari_userproject = Userproject::where('user_id', Auth::user()->id)->where('project_id', $id_project)->first();
+        if($cari_userproject == TRUE){
+            $data_project = Project::where('id', $cari_userproject->project_id)->first();
+            if($data_project == TRUE){
+                $data_resource = Resource::where('id', $id_resources)->first();
+                if($data_resource == TRUE){
+                    $data_skema = Skema::where('resource_id',$data_resource->id)->get();
+                    $data_opsi = Skemaopsi::get();
+                    $data_opsigroup = Skemaopsigroup::get();
+                    $data_cek = Skema::where('resource_id', $data_resource->id)->where('type_schema','array')->get();
+                    return view('user.edit_resource', compact('data_skema','data_project','data_resource','data_opsi','data_opsigroup','data_cek'));
+                }
+            }
+        }else{
+            return redirect('/project/'.Auth::user()->id)->with('failed', 'Project doesnt exists');
+        }
     }
 
     public function new_resource(Request $request, $id, $id_project) {
-    	$user = User::where('id',$id)->first();
-    	// $project = Project::where('user_id',$id)->where('id',$id_project)->first();
-    	// $opsiskema = Skemaopsi::get();
-    	// $opsigroupnya = Skemaopsigroup::get();
-    	// return view('user.new_resource')->with('data_project',$project)->with('data_opsi', $opsiskema)->with('data_group_opsi', $opsigroupnya);
-    	$data_project = Project::where('user_id',$id)->where('id',$id_project)->first();
-    	$data_opsigroup = Skemaopsigroup::get();
-        // return $data_opsigroup;
-    	$data_opsi = Skemaopsi::get();
-    	
-    	return view('user.new_resource', compact('data_project','data_opsi','data_opsigroup'));
+        $cari_userproject = Userproject::where('user_id', Auth::user()->id)->where('project_id', $id_project)->first();
+        if($cari_userproject == TRUE){
+            $data_project = Project::where('id', $cari_userproject->project_id)->first();
+            if($data_project == TRUE){
+                $data_opsigroup = Skemaopsigroup::get();
+                $data_opsi = Skemaopsi::get();
+                return view('user.new_resource', compact('data_project','data_opsi','data_opsigroup'));
+            }
+        }
     }
 
     public function add_resource(Request $request) {
@@ -159,6 +182,7 @@ class ProjectController extends Controller
 
     	}
         $ud = Auth::user()->id;
+        $generate = $this->generate_data($create_resource->id);
         return redirect("/project/$ud/p/$request->project_id")->with('success','new resource created !');
     }
 
@@ -209,10 +233,55 @@ class ProjectController extends Controller
 	    	}
 	    }
         $ud = Auth::user()->id;
+        $generate = $this->generate_data($request->resource_id);
         return redirect("/project/$ud/p/$request->project_id")->with('success','the resource updated !');
     }
 
-    public function generate_data(Request $request)
+    public function generate_data($resource_id)
+    {
+        $data = Skema::where('resource_id', $resource_id)->where('parent_id','')->with('child')->select('id','name_schema','type_schema','parent_id','field')->get();
+        $search_ = Resource::where('id', $resource_id)->first();
+        $searchProject = Project::where('id', $search_->project_id)->first();
+
+        $faker = Faker::create();
+        $no = 1;
+
+        $resouc = [];
+        for ($i=1; $i < 51; $i++) { 
+            # code...
+            $ha = array();
+            foreach ($data as $key) {
+                $d = $key->type_schema;
+                // $ha[] = ;
+            
+                    if($key->type_schema == 'array'){
+                        // echo "<p>".$key->name_schema;
+                        $oy = array();
+                        foreach($key->child as $hi){
+                            $f = $hi->type_schema;  
+                            // echo "<li>".$hi->name_schema." : ".$faker->$f."</li></p>";
+                            $oy[$hi->name_schema] = $faker->$f;
+                        }    
+                        $ha[$key->name_schema] = $oy;
+                    }else if($key->type_schema == 'ObjectID'){
+                        $ha[$key->name_schema] = $i;
+                    }else{
+                        $ha[$key->name_schema] = $faker->$d;
+                    }
+            }
+            array_push($resouc, $ha);
+        }
+        $di_encode = json_encode([$search_->name_resource => $resouc]);
+
+        $file = '.json';
+        $destinationPath=public_path('/users/project')."/$searchProject->name_project/";
+        if (!is_dir($destinationPath)) {
+         mkdir($destinationPath,0777,true);  
+        }
+        $create = file_put_contents($destinationPath.$search_->name_resource.$file,$di_encode);
+    }
+
+    public function generate_data_backup(Request $request)
     {
     	// return $request->all();
         // require_once '/path/to/Faker/src/autoload.php';
@@ -332,6 +401,27 @@ class ProjectController extends Controller
         Resource::where('id',$request->resource_id)->delete();
 
         return redirect("/project/$request->ud/p/$request->pid")->with('success','the resource deleted !');
+    }
+
+    public function delete_resource_api(Request $request)
+    {
+        $search = Skema::where('resource_id', $request->resource_id)->first();
+        if($search == TRUE){
+            $resource = Resource::where('id', $search->resource_id)->first();
+            if($resource == TRUE){
+                $cari_userproject = Userproject::where('user_id', Auth::user()->id)->where('project_id', $resource->project_id)->first();
+                if($cari_userproject == TRUE){
+                    // $delete = TRUE;
+                    $delete = $search->delete();
+                    $delete = $resource->delete();
+                     if($delete == TRUE){
+                        return response()->json(['result'=>true,'msg'=>"Data has been deleted"],200);
+                    }else{
+                        return response()->json(['result'=>false,'msg'=>"Not deleted"],500);
+                    }
+                }
+            }
+        }
     }
 
     public function handleRequest(Request $request, $project, $uri)

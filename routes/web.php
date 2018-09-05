@@ -16,6 +16,12 @@ Route::get('/s', function () {
     return view('welcome');
 });
 
+Route::get('/testing', function(){
+	return view('portal');
+});
+
+// Route::post('/coba', 'ProjectController@delete_resource_api');
+
 Route::get('/test', 'TestController@index');
 
 
@@ -23,12 +29,13 @@ Route::get('/test', 'TestController@index');
 
 // Route::get('/{id}', 'UserController@project');
 
-
+Route::get('','UserController@page');
 Route::group(['middleware' => 'auth'], function (){
-	Route::get('','UserController@page');
+	
 	Route::get('/about', 'UserController@help');
 
 	// Project
+	Route::post('/invite_project', 'ProjectController@invite_project');
 	Route::post('/add_project', 'ProjectController@add_project');
 	Route::post('/add_resource', 'ProjectController@add_resource');
 	Route::post('/edit_resource_update', 'ProjectController@edit_resource_update');
@@ -37,7 +44,8 @@ Route::group(['middleware' => 'auth'], function (){
 	Route::get('project/{id}/p/{id_project}','ProjectController@detail_project');
 	Route::get('project/{id}/p/{id_project}/resource/{id_resource}','ProjectController@edit_resource');
 	Route::get('project/{id}/p/{id_project}/new_resource','ProjectController@new_resource');
-	Route::post('/delete_resource','ProjectController@delete_resource');
+	// Route::post('/delete_resource','ProjectController@delete_resource');
+	Route::post('/delete_resource', 'ProjectController@delete_resource_api');
 });
 
 // Route::get('/show/{all}', 'ProjectController@show_json')->where('all', '.*');
