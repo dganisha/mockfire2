@@ -19,4 +19,8 @@ class Skema extends Model
     public function child() {
     	return $this->hasMany('App\Skema','parent_id');
     }
+
+    public function new_child(){
+        return $this->hasMany('App\Skema', 'child_id');
+    }
 }

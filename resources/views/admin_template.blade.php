@@ -31,8 +31,9 @@
   <link href="{{ asset("/mockfire/lib/modal-video/css/modal-video.min.css") }}" rel="stylesheet">
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <!-- DataTables -->
+  <link rel="stylesheet" type="text/css" href="{{ asset("/mockfire/lib/datatables/dataTables.bootstrap4.min.css") }}">
   <!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css"> -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+  <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"> -->
   <!-- <link rel="stylesheet" href="{{ asset("/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css") }}"> -->
 
   <!-- Main Stylesheet File -->
@@ -98,7 +99,12 @@
   <script src="{{ asset("/mockfire/js/main.js") }}"></script>
 <script>
   $(document).ready(function() {
-    $('#example').DataTable();
+    $('#example').DataTable({
+      "language": {
+        "search": "",
+        "searchPlaceholder": "Masukkan kata kunci"
+      }
+    });
   });
 
   function nospaces(t){
@@ -260,7 +266,7 @@
               $(this).parents(".skema").find(".skema2").append('<div class="new_form d'+x+' form-group"><input class="get_input form-control" name="'+search_field+'['+isi+'][data][]" onkeyup="nospaces(this)" type="text" placeholder="New Field '+isi+'"/></div>'); //add input box
               
               // $(this).parents(".skema").find(".skema2").append('<div class="new_form form-group"><input class="form-control" name="field2['+isi+'][key]" type="text" placeholder="Input new field '+isi+'"/></div>');
-              $(this).parents(".skema").find(".skema3").append('<div class="new_form2 d'+x+' form-group"><select class="form-control select2" name="'+search_field+'['+isi+'][type][]" style="width: 100%;" id="type">@isset($data_opsigroup) @foreach($data_opsigroup as $databaru)<optgroup label="{{ $databaru->option_grup }}">@isset($data_opsi) @foreach($data_opsi as $opsi) @if($opsi->name_opsi == 'array') @elseif($opsi->skemaopsigroup_id == $databaru->id)<option value="{{ $opsi->name_opsi }}">{{ $opsi->value_opsi }}</option> @endif @endforeach @endisset</optgroup>@endforeach @endisset</select>');
+              $(this).parents(".skema").find(".skema3").append('<div class="new_form2 d'+x+' form-group"><select class="form-control select2" name="'+search_field+'['+isi+'][type][]" style="width: 100%;" id="type">@isset($data_opsigroup) @foreach($data_opsigroup as $databaru)<optgroup label="{{ $databaru->option_grup }}">@isset($data_opsi) @foreach($data_opsi as $opsi) @if($opsi->name_opsi == 's') @elseif($opsi->skemaopsigroup_id == $databaru->id)<option value="{{ $opsi->name_opsi }}">{{ $opsi->value_opsi }}</option> @endif @endforeach @endisset</optgroup>@endforeach @endisset</select>');
               var haha = $(this).parents(".skema").find(".skema3")
               $(haha).find(".select2").select2()
               $(this).parents(".skema").find(".skema4").append('<div class="remove-button d'+x+'"><p class="remove_array"><a class="text-danger"><i class="fa fa-close"></i></a></p></div>');

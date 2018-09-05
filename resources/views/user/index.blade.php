@@ -25,12 +25,13 @@
     </div>
   </section><!-- #hero -->
 
+
   <section id="get-started" class="padd-section wow fadeInUp content container-fluid">
     <div class="container">
       <div class="row">
         <div class="col-xs-12 col-md-12 col-lg-12">
-          <div class="block-box">
-            <h3 class="text-center">Your Projects</h3>
+          <div class="block-box table-responsive">
+            <h4 class="text-center">My Projects</h4>
             <table id="example" class="table table-striped table-bordered" style="width:100%">
               <thead>
                 <tr>
