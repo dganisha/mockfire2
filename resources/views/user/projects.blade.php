@@ -22,7 +22,7 @@
     @if (Session::has('success'))
     	<script>swal("Success!", "{{ Session::get('success')}}", "success");</script>
     @elseif(Session::has('failed'))
-    	<script>swal("Success!", "{{ Session::get('failed')}}", "success");</script>
+    	<script>swal("Failed!", "{{ Session::get('failed')}}", "error");</script>
     @endif
 
     <div class="container">

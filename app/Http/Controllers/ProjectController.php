@@ -19,6 +19,7 @@ use Faker\Factory as Faker;
 use Auth;
 use File;
 use Storage;
+use Validator;
 use Exception;
 
 class ProjectController extends Controller
@@ -35,20 +36,37 @@ class ProjectController extends Controller
     public function invite_project(Request $request)
     {
         // return $request->all();
+        $this->validate($request, [
+            'email' => 'required|email',
+        ]);
+        if($request->email == Auth::user()->email){
+            return redirect("/project/".Auth::user()->id."/p/$request->projectid")->with('failed','Anda tidak dapat menambahkan anda sendiri');
+        }
         $user = User::where('email', $request->email)->first();
-        if($user == TRUE){
-            $invite = Userproject::create([
-                'user_id' => $user->id,
-                'project_id' => $request->projectid
-            ]);
-            if($invite == TRUE){
-                return redirect("/project/".Auth::user()->id."/p/$request->projectid")->with('success','Success invite friend');
+        $user_project = Userproject::where('user_id',$user->id)->where('project_id',$request->projectid)->count();
+        if($user_project >= 1){
+            return redirect("/project/".Auth::user()->id."/p/$request->projectid")->with('failed','User sudah ada di dalam proyek');
+        }else{
+            if($user == TRUE){
+                $invite = Userproject::create([
+                    'user_id' => $user->id,
+                    'project_id' => $request->projectid
+                ]);
+                if($invite == TRUE){
+                    return redirect("/project/".Auth::user()->id."/p/$request->projectid")->with('success','Success invite friend');
+                }
+            }else{
+                return redirect("/project/".Auth::user()->id."/p/$request->projectid")->with('failed','Email tidak ditemukan');
             }
         }
     }
 
     public function add_project(Request $request) {
     	// return $request->all();
+
+        $this->validate($request, [
+            'name_project' => 'required',
+        ]);
 
     	$name_project = $request->name_project;
     	$user_id = $request->user_id;
