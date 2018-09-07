@@ -8,6 +8,7 @@ use App\Project;
 use App\Resource;
 use App\Skemaopsi;
 use App\Skemaopsigroup;
+use Validator;
 
 class AdminController extends Controller
 {
@@ -26,6 +27,9 @@ class AdminController extends Controller
     public function delete_user(Request $request)
     {
         // return $request->all();
+        $request->validate([
+             'ud' => 'required|numeric',
+        ]);
         $user = User::where('id',$request->ud)->delete();
         return redirect('admin/users')->with('success','The user deleted with all his/her project !');
 
@@ -40,6 +44,10 @@ class AdminController extends Controller
     public function delete_project(Request $request)
     {
     	// return $request->all();
+        $request->validate([
+             'idp' => 'required|numeric',
+        ]);
+
     	$project = Project::where('id',$request->idp)->delete();
     	return redirect('admin/projects')->with('success','The project deleted with resource and skema !');
 
@@ -60,6 +68,11 @@ class AdminController extends Controller
     public function add_data_proses(Request $request)
     {
         // return $request->all();
+        $request->validate([
+             'category' => 'required|numeric',
+             'valuedata' => 'required',
+             'namedata' => 'required'
+        ]);
         $addData = Skemaopsi::create([
                         'skemaopsigroup_id' => $request->category,
                         'name_opsi' => $request->valuedata,
@@ -82,6 +95,11 @@ class AdminController extends Controller
     public function edit_data_proses(Request $request)
     {
         // return $request->all();
+        $request->validate([
+             'category' => 'required|numeric',
+             'valuedata' => 'required',
+             'namedata' => 'required'
+        ]);
         $updateData = Skemaopsi::where('id', $request->id)->update([
                 'skemaopsigroup_id' => $request->category,
                 'name_opsi' => $request->valuedata,
@@ -107,6 +125,10 @@ class AdminController extends Controller
 
     public function add_category_proses(Request $request)
     {
+        $request->validate([
+             'namec' => 'required',
+        ]);
+
         $addData = Skemaopsigroup::create([ 'option_grup' => $request->namec ]);
         if($addData){
            return redirect('/admin/data_category')->with('success', "Data berhasil menambah kategori $request->namec");
@@ -124,6 +146,11 @@ class AdminController extends Controller
     public function edit_category_proses(Request $request)
     {
         // return $request->all();
+        $request->validate([
+             'namec' => 'required',
+             'id' => 'required|numeric'
+        ]);
+
         $updateData = Skemaopsigroup::where('id', $request->id)->update([ 'option_grup' => $request->namec ]);
         if($updateData){
             return redirect('/admin/data_category')->with('success', "Data $request->namec berhasil diupdate");

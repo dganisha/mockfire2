@@ -1,55 +1,44 @@
 @extends('admin_template')
 
 @section('content')
-    <div class='row'>
-        <div class="col-xs-12">
-            <div class="box">
-                <div class="box-header with-border">
-                  <h3 class="box-title">Mock Data Control</h3>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body table-responsive">
-                	<p><a href="{{ url('/') }}/admin/data_opsi/tambah" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Data</button></a></p>
-                	@if (Session::has('success'))
-                      <div class="alert alert-success alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                        <h4><i class="icon fa fa-check"></i> Success!</h4>
-                        {{ Session::get('success')}}
-                      </div>
-					         @elseif(Session::has('failed'))                 
-						          <div class="alert alert-danger alert-dismissible">
-	                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-	                        <h4><i class="icon fa fa-close"></i> Failed!</h4>
-	                        {{ Session::get('failed')}}
-                      </div>     
-                    @endif
-                  <table id="table" class="table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Name Opsi</th>
-                          <th>Value Opsi</th>
-                          <th>Category</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                      @php
-                        $no = 1;
-                      @endphp
-                      @foreach($data as $d)
-                          <tr>
-                              <td><a href="{{ url('/') }}/admin/data_opsi/edit/{{ $d->id }}">{{ $no++ }}</a></td>
-                              <td>{{ $d->value_opsi }}</td>
-                              <td>{{ $d->name_opsi }}</td>
-                              <td>{{ $d->skemaopsigroup->option_grup }}</td>
-                          </tr>
-                      @endforeach
-                    </tbody>
-                  </table>
-                </div>
-                <!-- /.box-body -->
-              </div>
-            </div>
+	@if (Session::has('success'))
+      <script>swal("Success!", "{{ Session::get('success')}}", "success");</script>
+    @elseif (Session::has('failed'))
+      <script>swal("Failed!", "{{ Session::get('failed')}}", "error");</script>
+    @endif
 
-    </div><!-- /.row -->
+    <section id="get-started" class="padd-section wow fadeInUp content container-fluid">
+    	<div class="container">
+	      <div class="row">
+	        <div class="col-xs-12 col-md-12 col-lg-12">
+	          <div class="block-box table-responsive">
+	          	<h4>List Mock Data <a href="{{ url('/') }}/admin/data_opsi/tambah"><button type="button" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Tambah Data</button></a></h4><br><hr>
+	            <table id="example" class="table table-striped table-bordered" style="width:100%">
+	              <thead>
+	                <tr>
+	                    <th>#</th>
+	                    <th>Name Opsi</th>
+                        <th>Value Opsi</th>
+                        <th>Category</th>
+                        <th>Action</th>
+	                </tr>
+	              </thead>
+	              <tbody>
+	                @php $no = 1; @endphp
+	                @foreach($data as $d)
+                    <tr>
+                        <td>{{ $no++ }}</td>
+                        <td>{{ $d->value_opsi }}</td>
+                        <td>{{ $d->name_opsi }}</td>
+                        <td>{{ $d->skemaopsigroup->option_grup }}</td>
+                        <td><a href="{{ url('/') }}/admin/data_opsi/edit/{{ $d->id }}"><button type="button" class="baten baten-warning"><i class="fa fa-edit"></i> Edit Mock Data</button></a></td>
+                    </tr>
+                    @endforeach
+	              </tbody>
+	            </table>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+    </section>
 @endsection
