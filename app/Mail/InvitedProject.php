@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class WelcomeEmail extends Mailable
+class InvitedProject extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,10 +18,12 @@ class WelcomeEmail extends Mailable
      */
 
     public $user;
+    public $project;
 
-    public function __construct($user)
+    public function __construct($user, $project)
     {
         $this->user = $user;
+        $this->project = $project;
     }
 
     /**
@@ -31,6 +33,6 @@ class WelcomeEmail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Welcome to MockFire!')->view('emails.welcome');
+        return $this->subject("You're Invited to Project in MockFire!")->view('emails.inviteuser');
     }
 }

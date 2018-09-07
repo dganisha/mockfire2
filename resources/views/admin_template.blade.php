@@ -178,6 +178,51 @@
     });    
   });
 </script>
+
+<script type="text/javascript">
+  $(document).on('click', '.delete-project', function(){
+    swal({
+      title: "Anda yakin?",
+      text: "Data untuk project ini akan seluruhnya dihapus.",
+      icon: "warning",
+      buttons: {
+        cancel: "Close",
+        catch: {
+          text: "OK",
+          closeModal: false,
+        },
+      }
+      // dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        var project = $(this).data('project')
+        $.ajax({
+          type: "POST",
+          data: "project_id=" + project,
+          url: '{{ url("/") }}/delete_project/proses',
+          dataType: "json",
+          success: function(data) {
+            var response = data.result;
+            var msg = data.msg;
+            if(response == true){
+              swal("Project anda telah berhasil dihapus", {
+                icon: "success",
+              });
+              $("#"+project).remove()
+            }else{
+              swal(msg);
+            }
+          }, error: function() {
+            swal("Something wrong, Your data is not deleted.");
+          }
+        });        
+      } else {
+        swal("Your project is safe.");
+      }
+    });    
+  });
+</script>
 @if(Request::segment(5) === "new_resource")
 <script>
         $(document).ready(function() {
@@ -201,7 +246,7 @@
                     console.log(tes);
                     // source: "/tes"
 
-                    $(wrapper).append('<div class="row skema"><div class="col-xs-4 col-md-3 col-lg-3"><input class="form-control namefield" onkeyup="nospaces(this)" type="text" name="'+tes+'[key]" placeholder="Field Name"></div><div class="col-xs-4 col-md-3 col-lg-3"><select class="form-control select2 select_type" name="'+tes+'[value]" style="width: 100%;" id="type">@isset($data_opsigroup) @foreach($data_opsigroup as $databaru)<optgroup label="{{ $databaru->option_grup }}">@isset($data_opsi) @foreach($data_opsi as $opsi) @if($opsi->skemaopsigroup_id == $databaru->id)<option value="{{ $opsi->name_opsi }}">{{ $opsi->value_opsi }}</option> @endif @endforeach @endisset</optgroup>@endforeach @endisset</select></div><p class="add_array"><a class="baten baten-danger remove_field"><i class="fa fa-remove"></i></a></p><div class="col-xs-3 col-md-3 col-lg-3"></div><p><div class="form-skema"><div class=" col-md-3 col-lg-3 skema2"></div><div class="col-md-3 col-lg-3 skema3"></div></p></div></div>').find('.select_type').select2();  
+                    $(wrapper).append('<div class="row skema"><div class="col-xs-4 col-md-3 col-lg-3"><input class="form-control namefield" onkeyup="nospaces(this)" type="text" name="'+tes+'[key]" placeholder="Field Name"></div><div class="col-xs-4 col-md-3 col-lg-3"><select class="form-control select2 select_type" name="'+tes+'[value]" style="width: 100%;" id="type">@isset($data_opsigroup) @foreach($data_opsigroup as $databaru)<optgroup label="{{ $databaru->option_grup }}">@isset($data_opsi) @foreach($data_opsi as $opsi) @if($opsi->skemaopsigroup_id == $databaru->id)<option value="{{ $opsi->name_opsi }}">{{ $opsi->value_opsi }}</option> @endif @endforeach @endisset</optgroup>@endforeach @endisset</select></div><p class="add_array"><a class="remove_field"><button type="button" class="baten baten-danger"><i class="fa fa-remove"></i> Delete parents field</button></a></p><div class="col-xs-3 col-md-3 col-lg-3"></div><p><div class="form-skema"><div class=" col-md-3 col-lg-3 skema2"></div><div class="col-md-3 col-lg-3 skema3"></div></p></div></div>').find('.select_type').select2();  
             }
         });
             
@@ -216,7 +261,7 @@
                           // alert( this.value );
                           var value_select_type = this.value;
                           if(value_select_type == 'array') {
-                            $(this).parents(".skema").find(".add_array").append("<span style='visibility: hidden;'>-</span><a class='skema_add_field baten baten-primary' title='Add New Array' ><i class='fa fa-plus'></i></a>");
+                            $(this).parents(".skema").find(".add_array").append("<a class='skema_add_field' title='Add New Array'><button type='button' class='baten baten-primary'><i class='fa fa-plus'></i> New Child Field</button></a>");
                             // $(this).parents(".skema").find(".add_array").append("<a class='skema_add_field btn btn-primary' title='Add New Array' ><i class='fa fa-plus'></i></a>");
                             } else {
                               // console.log($(this).parents(".add_array").find(".skema_add_field").remove()) 
@@ -343,7 +388,7 @@
                     var tes = fieldbaru.replace(fieldbaru,'field[field'+no+']');
                     // console.log(tes);
 
-                    $(wrapper).append('<div class="row skema"><div class="col-xs-4 col-md-3 col-lg-3"><input class="form-control namefield" onkeyup="nospaces(this)" type="text" name="'+tes+'[key]" placeholder="Field Name"></div><div class="col-xs-4 col-md-3 col-lg-3"><select class="form-control select2 select_type" name="'+tes+'[value]" style="width: 100%;" id="type">@isset($data_opsigroup) @foreach($data_opsigroup as $databaru)<optgroup label="{{ $databaru->option_grup }}">@isset($data_opsi) @foreach($data_opsi as $opsi) @if($opsi->skemaopsigroup_id == $databaru->id)<option value="{{ $opsi->name_opsi }}">{{ $opsi->value_opsi }}</option> @endif @endforeach @endisset</optgroup>@endforeach @endisset</select></div><p class="add_array"><a class="baten baten-danger remove_field" title="Delete"><i class="fa fa-remove"></i></a></p><div class="col-xs-3 col-md-3 col-lg-3"></div><div class="form-skema"><div class="col-md-3 col-lg-3 skema2"></div><div class="col-md-3 col-lg-3 skema3"></div></div><div class="col-md-1 skema4"></div></div>').find('.select_type').select2();
+                    $(wrapper).append('<div class="row skema"><div class="col-xs-4 col-md-3 col-lg-3"><input class="form-control namefield" onkeyup="nospaces(this)" type="text" name="'+tes+'[key]" placeholder="Field Name"></div><div class="col-xs-4 col-md-3 col-lg-3"><select class="form-control select2 select_type" name="'+tes+'[value]" style="width: 100%;" id="type">@isset($data_opsigroup) @foreach($data_opsigroup as $databaru)<optgroup label="{{ $databaru->option_grup }}">@isset($data_opsi) @foreach($data_opsi as $opsi) @if($opsi->skemaopsigroup_id == $databaru->id)<option value="{{ $opsi->name_opsi }}">{{ $opsi->value_opsi }}</option> @endif @endforeach @endisset</optgroup>@endforeach @endisset</select></div><p class="add_array"><a class="remove_field" title="Delete"><button type="button" class="baten baten-danger"><i class="fa fa-remove"></i> Delete Parents Field</button></a></p><div class="col-xs-3 col-md-3 col-lg-3"></div><div class="form-skema"><div class="col-md-3 col-lg-3 skema2"></div><div class="col-md-3 col-lg-3 skema3"></div></div><div class="col-md-2 skema4"></div></div>').find('.select_type').select2();
             }
             // var haha = $(append)
             // console.log($(haha));
@@ -367,7 +412,7 @@
                           // alert( this.value );
                           var value_select_type = this.value;
                           if(value_select_type == 'array') {
-                            $(this).parents(".skema").find(".add_array").append("<a class='baten baten-primary skema_add_field'><i class='fa fa-plus'></i></a>")
+                            $(this).parents(".skema").find(".add_array").append("<a class='skema_add_field'><button type='button' class='baten baten-primary'><i class='fa fa-plus'></i> New Child Field</button></a>")
                             } else {
                               // console.log($(this).parents(".add_array").find(".skema_add_field").remove()) 
                               // $(this).parent(".skema").find(".skema2").remove()
@@ -385,7 +430,7 @@
           var x = 1;
 
           $(this.document).on("click",".remove_array", function(e){ //user click on remove text
-                alert('Yakin untuk menghapus?')
+                // alert('Yakin untuk menghapus?')
                 var w = e.preventDefault(); $(this).parents('.skema4'); x--;
                 // $(this).parent('.skema4').find('.remove_array').addClass( "highlight" );
                 var cari_button = $(this).parent('.remove-button');
@@ -395,9 +440,13 @@
                 var cari_classhps = cari_button.append('').attr('class')
                 var wow = cari_classhps.split('remove-button')
                 var wow2 = wow[1].split('d');
+                // var toInt = parseInt(wow2[1]);
+                // var kalikan = parseInt(toInt+1)
+                // alert(kalikan);
                 var codenya = wow2[1].replace(wow2[1],wow2[1]+'d.');
                 // alert("w"+codenya+"w")
                 var dibalik = codenya.split("").reverse().join("")
+                // alert(dibalik);
                 // console.log($(this).parent('.skema2').find('.d'+wow[1]));
                 var cari_a1 = $(this).parents('.skema').find('.skema2')
                 var cari_a2 = $(this).parents('.skema').find('.skema3')
@@ -434,7 +483,7 @@
               $(this).parents(".skema").find(".skema3").last().append('<div class="new_form2 d'+x+' form-group"><p><select class="form-control select2" name="'+search_field+'['+isi+'][type][]" style="width: 100%;" id="type">@isset($data_opsigroup) @foreach($data_opsigroup as $databaru)<optgroup label="{{ $databaru->option_grup }}">@isset($data_opsi) @foreach($data_opsi as $opsi) @if($opsi->skemaopsigroup_id == $databaru->id) @if($opsi->name_opsi == 'array') @else <option value="{{ $opsi->name_opsi }}">{{ $opsi->value_opsi }}</option> @endif @endif  @endforeach @endisset</optgroup>@endforeach @endisset</select></p></div>');
               var haha = $(this).parents(".skema").find(".skema3")
               $(haha).find(".select2").select2()
-              $(this).parents(".skema").find(".skema4").last().append('<div class="remove-button d'+x+'"><p class="remove_array"><a class="baten baten-danger"><i class="fa fa-close"></i></a></p></div>');
+              $(this).parents(".skema").find(".skema4").last().append('<div class="remove-button d'+x+'"><p class="remove_array"><a class="baten baten-danger" title="Delete Child Field"><i class="fa fa-close"></i></a></p></div>');
               
             }
           });

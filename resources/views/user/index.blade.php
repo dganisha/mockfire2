@@ -43,16 +43,15 @@
               <tbody>
                 @php $no = 1; @endphp
                 @foreach($data_project as $data)
-                  <tr>
+                  <tr id="{{ $data->project->id }}">
                     <td>{{ $no++ }}</td>
-                    <td>{{ $data->project->name_project }}
+                    <td><a href="/project/{{ Auth::user()->id }}/p/{{ $data->project->id }}"><strong>{{ $data->project->name_project }}</strong></a>
                       @if($data->project->user_id == Auth::user()->id)
                         <small>(MASTER)</small>
                       @endif
                     </td>
                     <td class="text-center">
-                      <a href="/project/{{ Auth::user()->id }}/p/{{ $data->project->id }}" class="text-success"><i class="fa fa-external-link fa-1x"></i> Open</a>
-                      <a href="" class="text-danger"><i class="fa fa-trash-o fa-1x"></i> Delete</a>
+                      <a><button type="button" class="delete-project baten baten-danger" data-project="{{ $data->project->id }}"><i class="fa fa-trash-o fa-1x"></i> Delete Project</button></a>
                     </td>
                   </tr>
                 @endforeach

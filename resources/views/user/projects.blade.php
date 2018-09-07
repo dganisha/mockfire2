@@ -42,10 +42,10 @@
                 @foreach($data_resource as $data)
                   <tr id="{{ $data->id }}">
                     <td>{{ $no++ }}</td>
-                    <td><a href="/api/{{ $data_project->name_project }}/{{ $data->name_resource }}" target="_blank">{{ $data->name_resource }}</a></td>
+                    <td><a href="/api/{{ $data_project->name_project }}/{{ $data->name_resource }}" target="_blank"><strong>{{ $data->name_resource }}</strong></a></td>
                     <td class="text-center">
-                      <a href="/project/{{ Auth::user()->id }}/p/{{ $data_project->id }}/resource/{{ $data->id }}" class="text-success"><i class="fa fa-edit fa-1x"></i> Edit</a>
-                      <a class="delete-resource text-danger" data-resource="{{ $data->id }}"><i class="fa fa-trash-o fa-1x"></i> Delete</a>
+                      <a href="/project/{{ Auth::user()->id }}/p/{{ $data_project->id }}/resource/{{ $data->id }}" class="text-white"><button type="button" class="baten baten-warning"><i class="fa fa-edit fa-1x"></i> Edit Data</button></a>
+                      <a class="delete-resource text-danger" data-resource="{{ $data->id }}"><button type="button" class="baten baten-danger"><i class="fa fa-trash-o fa-1x"></i> Delete Data</button></a>
                     </td>
                   </tr>
                 @endforeach

@@ -2,6 +2,7 @@
 
 @section('content')
 	<section id="get-started" class="padd-section wow fadeInUp content container-fluid">
+	  <div class="container">
 	    <div class="row">
 	      <div class="col-md-12">
 	        <div class="box box-primary">
@@ -30,7 +31,7 @@
 		                     						@isset($data_opsigroup) @foreach($data_opsigroup as $databaru)<optgroup label="{{ $databaru->option_grup }}">@isset($data_opsi) @foreach($data_opsi as $opsi) @if($opsi->skemaopsigroup_id == $databaru->id) @if($data->type_schema == $opsi->name_opsi) <option value="{{ $data->type_schema }}" selected="selected">{{ $opsi->value_opsi }} (Current)</option>  @else <option value="{{ $opsi->name_opsi }}">{{ $opsi->value_opsi }}</option> @endif @endif  @endforeach @endisset</optgroup>@endforeach @endisset
 		                     					</select>
 					                      	</div>
-					                      	<p class="add_array"><a class="baten baten-danger remove_field" title="Delete"><i class="fa fa-remove"></i></a><a class="skema_add_field baten baten-primary" title="Add New Array"><i class="fa fa-plus"></i></a></p>
+					                      	<p class="add_array"><a class="remove_field" title="Delete"><button type="button" class="baten baten-danger"><i class="fa fa-remove"></i> Delete Parents Field</button></a><a class="skema_add_field" title="Add New Array"><button type="button" class="baten baten-primary"><i class="fa fa-plus"></i> New Child Field</button></a></p>
 					                      	@php $nomor = 1; $nomor2 = 1; $nomor3 = 1; @endphp
 		                     				@foreach($data_skema as $data2)	
 		                     					@if($data2->parent_id != '' && $data2->field == $hiha)
@@ -49,9 +50,9 @@
 				                     						</select></p>
 						                     			</div>
 						                     		</div>
-						                     		<div class="col-xs-1 col-md-1 col-lg-1 skema4">
+						                     		<div class="col-xs-2 col-md-2 col-lg-2 skema4">
 						                     			<div class="remove-button d{{ $nomor3++ }}">
-						                     				<p class="remove_array"><a class="baten baten-danger"><i class="fa fa-close"></i></a></p>
+						                     				<p class="remove_array"><a title="Delete Child Field"><button type="button" class="baten baten-danger"><i class="fa fa-close"></i></button></a></p>
 						                     			</div>
 						                     		</div>
 						                     		<div class="col-xs-12 col-md-12 col-lg-12"></div>
@@ -67,25 +68,33 @@
 		                     					@if($data->type_schema == 'ObjectID')
 		                     						@php $disabled = "disabled" @endphp
 		                     						<input type="hidden" name="field[{{ $data->field }}][value]" value="{{ $data->type_schema }}">
+		                     						<select class="form-control select2 select_type" name="field[{{ $data->field }}][value]" style="width: 100%;" id="type" {{ $disabled }}>
+							                     	<option value="{{ $data->type_schema }}">Object ID</option>
+					                     			</select>
+					                     			<br><br>
 		                     					@else
 		                     						@php $disabled = "" @endphp
-		                     					@endif
 		                     						<select class="form-control select2 select_type" name="field[{{ $data->field }}][value]" style="width: 100%;" id="type" {{ $disabled }}>
 							                     	@isset($data_opsigroup) @foreach($data_opsigroup as $databaru)<optgroup label="{{ $databaru->option_grup }}">@isset($data_opsi) @foreach($data_opsi as $opsi) @if($opsi->skemaopsigroup_id == $databaru->id) @if($data->type_schema == $opsi->name_opsi) <option value="{{ $data->type_schema }}" selected="selected">{{ $opsi->value_opsi }} (Current)</option>  @else <option value="{{ $opsi->name_opsi }}">{{ $opsi->value_opsi }}</option> @endif @endif  @endforeach @endisset</optgroup>@endforeach @endisset
 					                     			</select>
 					                     			<br><br>
+		                     					@endif
+		                     						
 		                     				</div>
 		                     				@if($data->type_schema != 'ObjectID')
-		                     					<p class="add_array"><a class="baten baten-danger remove_field" title="Delete"><i class="fa fa-remove"></i></a></p>		         
+		                     					<p class="add_array"><a class="remove_field" title="Delete"><button type="button" class="baten baten-danger"><i class="fa fa-remove"></i> Delete Parents Field</button></a></p>		         
 		                     					<div class="col-xs-3"></div>
 		                     					<div class="col-md-3 skema2"></div>
-		                     					<div class="col-md-3 skema3"></div>            				
+		                     					<div class="col-md-3 skema3"></div> 
+		                     					<div class="col-xs-2 col-md-2 col-lg-2 skema4"></div>  
+
 		                     				@endif
 		                    			</div>
 		                    		@endif
 		                    	@endforeach
                   			</div>
-                  			<button type="button" class="add_field_button btn btn-primary" title="Add New Field"><i class="fa fa-plus"></i></button>
+                  			<hr>
+                  			<button type="button" class="add_field_button btn btn-primary" title="Add New Field"><i class="fa fa-plus"></i> Add New Parents Field</button>
                   			<button type="submit" class="btn btn-primary pull-right">Save Changes</button>
                   		</div>
 	            	</form>
@@ -94,5 +103,6 @@
 	        </div>
 	      </div>
 	    </div>
+	  </div>
 	</section>
 @endsection

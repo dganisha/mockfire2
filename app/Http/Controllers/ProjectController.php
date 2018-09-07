@@ -21,6 +21,8 @@ use File;
 use Storage;
 use Validator;
 use Exception;
+use App\Mail\InvitedProject;
+use Illuminate\Support\Facades\Mail;
 
 class ProjectController extends Controller
 {
@@ -43,17 +45,24 @@ class ProjectController extends Controller
             return redirect("/project/".Auth::user()->id."/p/$request->projectid")->with('failed','Anda tidak dapat menambahkan anda sendiri');
         }
         $user = User::where('email', $request->email)->first();
+        if(count($user) == 0){
+            return redirect("/project/".Auth::user()->id."/p/$request->projectid")->with('failed','Email tidak terdaftar di server');
+        }
         $user_project = Userproject::where('user_id',$user->id)->where('project_id',$request->projectid)->count();
         if($user_project >= 1){
             return redirect("/project/".Auth::user()->id."/p/$request->projectid")->with('failed','User sudah ada di dalam proyek');
         }else{
             if($user == TRUE){
+                $project = Project::where('id', $request->projectid)->first();
                 $invite = Userproject::create([
                     'user_id' => $user->id,
                     'project_id' => $request->projectid
                 ]);
+                $invite = Mail::to($user->email)->send(new InvitedProject($user, $project));
                 if($invite == TRUE){
                     return redirect("/project/".Auth::user()->id."/p/$request->projectid")->with('success','Success invite friend');
+                }else{
+                    return redirect("/project/".Auth::user()->id."/p/$request->projectid")->with('failed','Something wrong when send email. but user has invited to project');
                 }
             }else{
                 return redirect("/project/".Auth::user()->id."/p/$request->projectid")->with('failed','Email tidak ditemukan');
@@ -428,17 +437,59 @@ class ProjectController extends Controller
             $resource = Resource::where('id', $search->resource_id)->first();
             if($resource == TRUE){
                 $cari_userproject = Userproject::where('user_id', Auth::user()->id)->where('project_id', $resource->project_id)->first();
-                if($cari_userproject == TRUE){
-                    // $delete = TRUE;
-                    $delete = $search->delete();
-                    $delete = $resource->delete();
-                     if($delete == TRUE){
-                        return response()->json(['result'=>true,'msg'=>"Data has been deleted"],200);
+                $cari_project = Project::where('id', $cari_userproject->project_id)->first();
+                if($cari_userproject == TRUE && $cari_project == TRUE){
+                    // File::deleteDirectory(public_path('users/verif/').$user->id);
+                    $delete_file = File::delete(public_path("users/project/$cari_project->name_project/").$resource->name_resource.".json");
+                    if($delete_file == TRUE){
+                        $delete = TRUE;
+                        $delete = $search->delete();
+                        $delete = $resource->delete();
+                        if($delete == TRUE){
+                            return response()->json(['result'=>true,'msg'=>"Data has been deleted"],200);
+                        }else{
+                            return response()->json(['result'=>false,'msg'=>"Not deleted"],500);
+                        }
                     }else{
-                        return response()->json(['result'=>false,'msg'=>"Not deleted"],500);
+                        return response()->json(['result'=>false,'msg'=>"Not deleted. error when deleted file "],500);
                     }
                 }
             }
+        }
+    }
+
+    public function delete_project_api(Request $request)
+    {
+        // return $request->all();
+        $cari_userproject = Userproject::where('user_id', Auth::user()->id)->where('project_id',$request->project_id)->first();
+        if($cari_userproject == TRUE){
+            $cari_project = Project::where('id', $request->project_id)->first();
+            $deleteFolder = File::deleteDirectory(public_path("users/project/$cari_project->name_project"));
+                if($deleteFolder == TRUE){
+                    if($cari_project == TRUE){
+                        $cari_resource = Resource::where('project_id', $request->project_id)->get();
+                        foreach($cari_resource as $data){
+                            // echo $data->name_resource;
+                            $delete = Skema::where('resource_id', $data->id)->delete();
+                            // foreach($cari_skema as $data_skema){
+                            //     echo "<p>$data_skema->name_schema</p>";
+                            // }
+                        }
+                        $delete = Resource::where('project_id', $request->project_id)->delete();
+                        $delete = Userproject::where('project_id', $request->project_id)->delete();
+                        $delete = Project::where('id', $request->project_id)->delete();
+                        if($delete == TRUE){
+                            return response()->json(['result'=>true,'msg'=>"Project has been deleted"],200);
+                        }else{
+                            return response()->json(['result'=>false,'msg'=>"Data not deleted"],500);
+                        }
+                    }else{
+                        //error karena tidak ada project di server
+                        return response()->json(['result'=>false,'msg'=>"Project doesnt exists in server"],404);
+                    }
+                }else{
+                    return response()->json(['result'=>false,'msg'=>"Something wrong when deleted folder. ".public_path("users/project/$cari_project->name_project")],500);
+                }
         }
     }
 

@@ -24,6 +24,15 @@
             <li class="{{ Request::segment(1) === 'project' ? 'menu-active' : null }}">
               <a href="{{ url('project/'.Auth::user()->id.'') }}">Project</a>
             </li>
+            @if(Auth::user()->role == 'Administrator')
+            <li class="menu-has-children"><a href="">Administrator</a>
+              <ul>
+                <li><a href="/admin/users">List Users</a></li>
+                <li><a href="/admin/data_opsi">List Mock Data</a></li>
+                <li><a href="/admin/data_category">List Category Mock Data</a></li>
+              </ul>
+            </li>
+            @endif
             <li>
               <a href="{{ route('logout') }}"
                     onclick="event.preventDefault();

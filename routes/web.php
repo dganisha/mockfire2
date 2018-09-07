@@ -46,6 +46,7 @@ Route::group(['middleware' => 'auth'], function (){
 	Route::get('project/{id}/p/{id_project}/new_resource','ProjectController@new_resource');
 	// Route::post('/delete_resource','ProjectController@delete_resource');
 	Route::post('/delete_resource', 'ProjectController@delete_resource_api');
+	Route::post('/delete_project/proses','ProjectController@delete_project_api');
 });
 
 // Route::get('/show/{all}', 'ProjectController@show_json')->where('all', '.*');
