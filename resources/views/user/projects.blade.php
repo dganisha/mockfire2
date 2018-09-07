@@ -19,6 +19,12 @@
     	</div>    	
     </div>
 
+<!--     @if(count($errors) > 0)
+      @foreach($errors->all() as $error)
+        <script>swal("Failed!", "{{ error }}", "error");</script>
+      @endforeach
+    @endif -->
+
     @if (Session::has('success'))
     	<script>swal("Success!", "{{ Session::get('success')}}", "success");</script>
     @elseif(Session::has('failed'))

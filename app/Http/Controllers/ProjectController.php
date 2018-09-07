@@ -164,6 +164,14 @@ class ProjectController extends Controller
     }
 
     public function add_resource(Request $request) {
+        $request->validate([
+            'resource_name' => 'required',
+            'project_id' => 'required|numeric',
+            'field.*.key' => 'required',
+            'field.*.value' => 'required',
+            'field.*.value.array.data.*' => 'required',
+            'field.*.value.array.type.*' => 'required'
+        ]);
     	// return $request->all();
 
     	$decode = $request->all();
@@ -204,7 +212,7 @@ class ProjectController extends Controller
 
     		if(is_array($form['value'])) {
     			foreach ($form['value']['array']['data'] as $ki => $value) {
-    				Skema::create([
+    				$create_schema = Skema::create([
 			            'resource_id' => $create_resource->id,
 			            'name_schema' => $value,
 			            'type_schema' => $form['value']['array']['type'][$ki],
@@ -218,12 +226,24 @@ class ProjectController extends Controller
     	}
         $ud = Auth::user()->id;
         $generate = $this->generate_data($create_resource->id);
-        return redirect("/project/$ud/p/$request->project_id")->with('success','new resource created !');
+        if($create_schema == TRUE){
+            return redirect("/project/$ud/p/$request->project_id")->with('success','new resource created !');
+        }else{
+            return redirect("/project/$ud/p/$request->project_id")->with('failed','error when insert to database');
+        }
     }
 
     public function edit_resource_update(Request $request)
     {
-    	// return $request->all();
+        $request->validate([
+            'resource_name' => 'required',
+            'project_id' => 'required|numeric',
+            'field.*.key' => 'required',
+            'field.*.value' => 'required',
+            'field.*.value.array.data.*' => 'required',
+            'field.*.value.array.type.*' => 'required'
+        ]);
+    	return $request->all();
     	$decode = $request->all();
 
     	// $field = [];
