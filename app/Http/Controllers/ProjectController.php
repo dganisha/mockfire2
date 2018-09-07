@@ -38,14 +38,22 @@ class ProjectController extends Controller
     public function invite_project(Request $request)
     {
         // return $request->all();
-        $this->validate($request, [
-            'email' => 'required|email',
+
+        /*
+        # Laravel < 5.5
+        # $this->validate($request, [
+        #     'email' => 'required|email',
+        # ]);
+        */
+        //Laravel >= 5.5
+        $request->validate([
+             'email' => 'required|email',
         ]);
         if($request->email == Auth::user()->email){
             return redirect("/project/".Auth::user()->id."/p/$request->projectid")->with('failed','Anda tidak dapat menambahkan anda sendiri');
         }
         $user = User::where('email', $request->email)->first();
-        if(count($user) == 0){
+        if($user == false){
             return redirect("/project/".Auth::user()->id."/p/$request->projectid")->with('failed','Email tidak terdaftar di server');
         }
         $user_project = Userproject::where('user_id',$user->id)->where('project_id',$request->projectid)->count();
