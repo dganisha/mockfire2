@@ -78,7 +78,6 @@
                 <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                 <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
               </ul>
-              <span>programmer</span>
               <h4>Dhiemas Ganisha A P P</h4>
             </div>
           </div>
@@ -93,7 +92,6 @@
                 <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                 <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
               </ul>
-              <span>idea maker & support</span>
               <h4>Nunu Reza Mushinin</h4>
             </div>
           </div>
@@ -108,8 +106,7 @@
                 <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                 <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
               </ul>
-              <span>manager</span>
-              <h4>Kimberly Tran</h4>
+              <h4>-</h4>
             </div>
           </div>
         </div>

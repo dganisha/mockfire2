@@ -35,6 +35,7 @@
       <div class="row">
         <div class="col-xs-12 col-md-12 col-lg-12">
           <div class="block-box table-responsive">
+            <h4 class="text-center">My Data</h4><hr>
             <table id="example" class="table table-striped table-bordered" style="width:100%">
               <thead>
                 <tr>

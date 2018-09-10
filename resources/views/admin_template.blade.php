@@ -323,10 +323,10 @@
               $(this).parents(".skema").find(".skema2").append('<div class="new_form d'+x+' form-group"><input class="get_input form-control" name="'+search_field+'['+isi+'][data][]" onkeyup="nospaces(this)" type="text" placeholder="New Field '+isi+'" required/></div>'); //add input box
               
               // $(this).parents(".skema").find(".skema2").append('<div class="new_form form-group"><input class="form-control" name="field2['+isi+'][key]" type="text" placeholder="Input new field '+isi+'"/></div>');
-              $(this).parents(".skema").find(".skema3").append('<div class="new_form2 d'+x+' form-group"><p><select class="form-control new_select select2" name="'+search_field+'['+isi+'][type][]" style="width: 100%;" id="type">@isset($data_opsigroup) @foreach($data_opsigroup as $databaru)<optgroup label="{{ $databaru->option_grup }}">@isset($data_opsi) @foreach($data_opsi as $opsi) @if($opsi->name_opsi == 's') @elseif($opsi->skemaopsigroup_id == $databaru->id)<option value="{{ $opsi->name_opsi }}">{{ $opsi->value_opsi }}</option> @endif @endforeach @endisset</optgroup>@endforeach @endisset</select></p></div>');
+              $(this).parents(".skema").find(".skema3").append('<div data-id="d'+x+'"  class="new_form2 d'+x+' form-group"><p><select class="form-control new_select select2 d'+x+'" name="'+search_field+'['+isi+'][type][]" style="width: 100%;" id="type">@isset($data_opsigroup) @foreach($data_opsigroup as $databaru)<optgroup label="{{ $databaru->option_grup }}">@isset($data_opsi) @foreach($data_opsi as $opsi) @if($opsi->name_opsi == 's') @elseif($opsi->skemaopsigroup_id == $databaru->id)<option value="{{ $opsi->name_opsi }}">{{ $opsi->value_opsi }}</option> @endif @endforeach @endisset</optgroup>@endforeach @endisset</select></p></div>');
               var haha = $(this).parents(".skema").find(".skema3")
               $(haha).find(".select2").select2()
-              $(this).parents(".skema").find(".form-skema").append('<p class="array3 array'+x+'"><a href="#" class="baten baten-danger remove_array remove-button d'+x+'"><i class="fa fa-remove"></i></a></p><div class="col-xs-12 col-md-12 col-lg-12"></div>');
+              $(this).parents(".skema").find(".form-skema").append('<p class="array3 ed'+x+'"><a href="#" class="baten baten-danger remove_array remove-button d'+x+'"><i class="fa fa-remove"></i></a></p><div class="col-xs-12 col-md-12 col-lg-12"></div>');
               // $(this).parents(".skema").find(".skema4").append('<div class="add_new_array"><button type="button" class="remove button d'+x+' remove_array btn btn-danger"><i class="fa fa-close"></i></button></div>')
               // $(this).parents(".skema").find(".skema4").append('<div class="remove-button d'+x+'"><p class="remove_array add_new_array"><a class="text-danger"><i class="fa fa-close"></i></a></p></div>');
             }
@@ -339,15 +339,18 @@
      if(value_select_type == 'array') {
 
       var a = $(this).parents('.skema').find('.form-skema')
+      var a_cari = $(this).attr('class').split(' ')[3]
+      // console.log(a_cari)
       // var b = $(a).find('.new')
-      // console.log($(a).find('.array3'))
-      console.log($(a).find('.array3').append("   <a class='skema_new_field ' title='Add New Array' ><i class='fa fa-plus'></i></a>"))
-
-      // var cari_dulu = $(this).parents('.skema').find('.skema4').find('.new')
-      // console.log($(cari_dulu).find('.array3').append("   <a class='skema_new_field ' title='Add New Array' ><i class='fa fa-plus'></i></a>"))
-       // $(this).parents(".skema").find(".array3").append("   <a class='skema_new_field ' title='Add New Array' ><i class='fa fa-plus'></i></a>");
-
-       // $(this).parents(".skema").find(".add_array").append("<a class='skema_add_field btn btn-primary' title='Add New Array' ><i class='fa fa-plus'></i></a>");
+      var split = $(a).find('.array3').attr('class').split('d')
+      var classnya = 'd'+split[1];
+      // alert(classnya)
+      $(a).find('.e'+a_cari).append('   <a href="#" class="baten baten-primary skema_new_field" title="Add New Array"><i class="fa fa-plus"></i></a>')
+      var cari_sblm = $(this).parents('.skema').find('.form-skema')
+      var cari_sblm2 = $(cari_sblm).find('.skema3').find('.e'+a_cari)
+      var cari_class = $(cari_sblm2).data('id')
+      // console.log(cari_sblm2)
+      // alert(cari_sblm2)
        } else {
          // console.log($(this).parents(".skema").find(".skema_add_field").remove())
          // console.log($(this).parents(".skema").find(".skema2").empty())
