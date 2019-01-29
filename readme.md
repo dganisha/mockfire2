@@ -4,7 +4,7 @@ Mockfire is a free tool that lets you easily mock up APIs, generate custom data,
 
 ## Getting Started
 
-- Download database [here](https://github.com/meridianid/mockfire/blob/master/database/mockfire%20.sql).
+- Download database [here](https://github.com/dganisha/mockfire2/blob/master/database/mockfire%20.sql).
 - Settings Mail in .env .
 - Composer install
 - PHP artisan key:generate
